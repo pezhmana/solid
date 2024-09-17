@@ -12,4 +12,11 @@ class PostClass
         $post =$user->posts()->create($data);
         return $post;
     }
+
+    public function UserPost($username)
+    {
+        $userPosts = (new UserClass())->find($username)->posts;
+        $post = (new MediaClass())->getAllPost($userPosts);
+        return $post;
+    }
 }
