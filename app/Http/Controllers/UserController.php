@@ -2,13 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\LoginRequest;
+use App\Services\MediaClass;
+use App\Services\UserClass;
+
 
 class UserController extends Controller
 {
-    public function createUser(Request $request){
-        $request->validate(['name' => 'required','username'=>'required|unique:users,username','email'=>'required|unique:users,email']);
-        User::create($request->all());
+    protected $userClass;
+    protected $mediaClass;
+
+    public function __construct(UserClass $userClass,MediaClass $mediaClass)
+    {
+        $this->userClass = $userClass;
+        $this->mediaClass = $mediaClass;
     }
+
+    public function createUser(CreateUserRequest $request){
+        $user = $this->userClass->createUser($request->validated());
+        if ($request->profile) {
+            $this->mediaClass->addProfileMedia($user, $request->profile);
+        }
+        return response()->json($user);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $token = $this->userClass->login($request->validated());
+        return response()->json($token);
+
+    }
+
+    public function index($username){
+        $user =$this->userClass->indexUser($username);
+        return response()->json($user);
+    }
+
+
 }
