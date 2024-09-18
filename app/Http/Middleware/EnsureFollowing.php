@@ -22,7 +22,9 @@ class EnsureFollowing
 
         $status = $follower->status;
         $follow = $user->following()->where('type', 'accept')->where('following', $follower->id);
-
+        if($user->username ==$username ) {
+            return $next($request);
+        }
         if ($status == 'open') {
             return $next($request);
         } else {
