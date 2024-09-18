@@ -17,9 +17,21 @@ class UserClass
         if(!$user->exists()){
             $user = 'user not found';
         }else{
-            $user =$user->first();
+            $user =$user->first(['username','biography','status']);
         }
         return $user;
+    }
+
+    public function followingCount($username)
+    {
+        $count = $this->find($username)->followers()->where('type','accept')->count();
+        return $count;
+    }
+
+    public function followersCount($username)
+    {
+        $count = $this->find($username)->following()->where('type','accept')->count();
+        return $count;
     }
 
     public function login(array $data)
