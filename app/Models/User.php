@@ -67,4 +67,9 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Follow::class,'following');
     }
 
+    public function following()
+    {
+        return $this->hasMany(Follow::class,'follower');
+    }
+
 }
