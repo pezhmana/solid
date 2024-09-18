@@ -38,9 +38,11 @@ class UserController extends Controller
 
     public function index($username){
         $user =$this->userClass->indexUser($username);
-        $posts =$user->posts()->first();
         $posts = $this->PostClass->UserPost($username);
-        return response()->json([$user,$posts]);
+        $followingCount = $this->userClass->followingCount($username);
+        $followerCount = $this->userClass->followersCount($username);
+
+        return response()->json([$user,$posts,'follower'=>$followingCount,'following'=>$followerCount]);
     }
 
 
